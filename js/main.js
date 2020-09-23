@@ -58,7 +58,8 @@ function renderBoard(board) {
         strHTML += '<tr>';
         for (var j = 0; j < board[0].length; j++) {
             var cell = board[i][j];
-            var className = `cell cell-${i}-${j}`;
+            // var className = `cell cell-${i}-${j}`;
+            var idName = "cell-" + i + "-" + j;
             var content;
             if (cell.isShown) {
                 if (cell.isMine) {
@@ -69,7 +70,9 @@ function renderBoard(board) {
             } else {
                 content = EMPTY;
             }
-            strHTML += `<td class ="${className}" onclick="cellClicked(this,${i},${j})">${content}</td>`
+            // strHTML += `<td class ="${className}" onclick="cellClicked(this,${i},${j})">${content}</td>`
+            strHTML += `<td class="cell" id="${idName}" onclick="cellClicked(this,${i},${j})">${content}</td>`
+
         }
         strHTML += '</tr>'
     }
@@ -109,16 +112,19 @@ function cellClicked(elCell, i, j) {
     // console.log(i,j)
     // console.log(elCell);
     var cell = gBoard[i][j];
-    if (!cell.isMine) {
+    var value;
 
+
+    if (cell.isMine) {
+        value = MINE;
     } else {
-        //CASE THAT ITS A MINE
+        value = cell.minesAroundCount
     }
-
+    renderCell(i, j, value)
 }
 
-// function renderCell(elCell) {
-//     // Select the elCell and set the value
-//     var elCell = document.querySelector(`.cell${location.i}-${location.j}`);
-//     elCell.innerHTML = value;
-//   }
+function renderCell(i, j, value) {
+    // Select the elCell and set the value
+    var elCell = document.querySelector(`#cell-${i}-${j}`);
+    elCell.innerText = value;
+}
