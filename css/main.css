@@ -1,5 +1,5 @@
 .header {
-    position: fixed;
+    /* position: fixed; */
     Top: 0;
     background-color: #80CFA9;
     margin: 0;
@@ -54,10 +54,16 @@ body {
     text-align: center;
 }
 
+img {
+    margin-top: 10px;
+    width: 30px;
+    height: auto;
+}
+
 table {
     border-radius: 12px;
     background-color: #4C6663;
-    margin-top: 250px;
+    margin-top: 50px;
     margin-left: auto;
     margin-right: auto;
     border: 2px solid black;
@@ -78,7 +84,7 @@ td:hover {
     font-family: 'Bebas Neue', cursive;
     background-color: #C9D7F8;
     color: black;
-    position: fixed;
+    /* position: fixed; */
     bottom: 0px;
     padding: 20px;
     width: 100%;
