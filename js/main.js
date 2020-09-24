@@ -4,6 +4,7 @@
 var gBoard;
 const MINE = '💣';
 const EMPTY = '';
+const FLAG = "🚩";
 
 // The following variable provides us the information regarding the Game's inner counters of the user's 
 // actions (marked cells/ cells that already revealed, timestamp, and isOn)
@@ -27,13 +28,15 @@ var gLevel = {
 // the total result eventually.
 
 function init() {
-    gBoard = buildBoard(gLevel);
+    gBoard = buildBoard();
+    getRandomMines(gLevel.MINES)
     setMinesNegsCount(gBoard)
     renderBoard(gBoard);
+    gGame.isOn = true;
 }
 
 
-function buildBoard(gLevel) {
+function buildBoard() {
     var board = [];
     for (var i = 0; i < gLevel.SIZE; i++) {
         board[i] = [];
@@ -47,8 +50,6 @@ function buildBoard(gLevel) {
             board[i][j] = cell;
         }
     }
-    board[2][2].isMine = true;
-    board[2][0].isMine = true;
     return board;
 }
 
@@ -60,18 +61,14 @@ function renderBoard(board) {
             var cell = board[i][j];
             // var className = `cell cell-${i}-${j}`;
             var idName = "cell-" + i + "-" + j;
-            var content;
-            if (cell.isShown) {
-                if (cell.isMine) {
-                    content = MINE;
-                } else {
-                    content = cell.minesAroundCount;
-                }
-            } else {
-                content = EMPTY;
+            var content = EMPTY;
+            if (cell.isShown && cell.isMine) {
+                content = MINE;
+            } else if (cell.isShown && cell.minesAroundCount > 0 && !cell.isMine) {
+                content = cell.minesAroundCount;
             }
-            // strHTML += `<td class ="${className}" onclick="cellClicked(this,${i},${j})">${content}</td>`
-            strHTML += `<td class="cell" id="${idName}" onclick="cellClicked(this,${i},${j})">${content}</td>`
+
+            strHTML += `<td class="cell" id="${idName}" onclick="cellClicked(this,${i},${j})" oncontextmenu="cellMarked(this,${i},${j},event)">${content}</td>`
 
         }
         strHTML += '</tr>'
@@ -109,16 +106,16 @@ function countMinesAroundCell(board, pos) {
 }
 
 function cellClicked(elCell, i, j) {
-    // console.log(i,j)
-    // console.log(elCell);
+    if (!gGame.isOn) return;
     var cell = gBoard[i][j];
-    var value;
-
-
+    if (cell.isMarked) return;
+    elCell.style.backgroundColor = '#80CFA9';
+    var value = EMPTY;
+    cell.isShown = true;
     if (cell.isMine) {
         value = MINE;
-    } else {
-        value = cell.minesAroundCount
+    } else if (cell.minesAroundCount > 0 && !cell.isMine) {
+        value = cell.minesAroundCount;
     }
     renderCell(i, j, value)
 }
@@ -128,3 +125,73 @@ function renderCell(i, j, value) {
     var elCell = document.querySelector(`#cell-${i}-${j}`);
     elCell.innerText = value;
 }
+
+function cellMarked(elCell, i, j, rightClick) {
+    console.log(rightClick);
+    rightClick.preventDefault() === false;
+
+    var currCell = gBoard[i][j];
+    console.log(elCell);
+    if (!gGame.isOn) return;
+    if (currCell.isShown) return;
+    if (!currCell.isMarked) {
+        gGame.markedCount++
+        currCell.isMarked = true;
+        elCell.innerText = FLAG;
+    } else {
+        currCell.isMarked = false;
+        elCell.innerText = EMPTY;
+        gGame.markedCount--
+    }
+}
+
+function getAllPossibleCoords(board) {
+    var allPossibleCoords = [];
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++) {
+            var currCell = board[i][j];
+            //TOBECHANGED: This if.
+            if (!currCell.isMine) {
+                allPossibleCoords.push({ i, j });
+            }
+        }
+    }
+    return allPossibleCoords;
+}
+
+function getRandomMines(MinesNum) {
+    var possibleCoords = getAllPossibleCoords(gBoard).slice();
+    for (var i = 0; i < MinesNum; i++) {
+        var randomIDX = getRandomInt(0, possibleCoords.length)
+        var randomCoord = possibleCoords[randomIDX];
+        gBoard[randomCoord.i][randomCoord.j].isMine = true
+        possibleCoords.splice(randomIDX, 1);
+    }
+}
+
+function setDifficultyLevel(elBtn) {
+    if (elBtn.innerText === 'Beginner') {
+        gLevel = {
+            SIZE: 4,
+            MINES: 2
+        };
+        init();
+    }
+    else if (elBtn.innerText === 'Medium') {
+        gLevel = {
+            SIZE: 8,
+            MINES: 12
+        };
+        init();
+        // console.log('Medium')
+    }
+    else if (elBtn.innerText === 'Expert') {
+        gLevel = {
+            SIZE: 12,
+            MINES: 30
+        };
+        init();
+        // console.log('Expert')
+    }
+}
+

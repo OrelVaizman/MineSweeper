@@ -6,21 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
     <title>Minesweeper Game</title>
 </head>
 
 <body onload="init()">
-    <!-- onkeyup="movePacman(event)" -->
     <div class="header">
         <h1>The Mine-Sweeper!</h1>
+        <button class="buttons" onclick="setDifficultyLevel(this)">Beginner</button>
+        <button class="buttons" onclick="setDifficultyLevel(this)">Medium</button>
+        <button class="buttons" onclick="setDifficultyLevel(this)">Expert</button>
+        
     </div>
-
+    <div class="timer">00:00</div>
+    
     <body>
-        <!-- <h1>this is the game!</h1> -->
         <div class="game-container">
         </div>
         <script src="js/utils.js"></script>
         <script src="js/main.js"></script>
+        <div class="footer">© All Rights Reserved - Orel Vaizman ©</div>
+
     </body>
 
 </html>
