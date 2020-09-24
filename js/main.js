@@ -3,7 +3,13 @@
 var gBoard;
 const MINE = '💣';
 const EMPTY = ''; /*Hiding the content*/
-const FLAG = "🚩";
+const FLAG = '🚩';
+const LOSESMILEY = '😫';
+const WINNINGSMILEY = '😝';
+const SMILEY = '😃';
+var gTimeInterval;
+
+
 
 var gGame = {
     isOn: true,
@@ -21,6 +27,7 @@ var gLevel = {
 
 /* Initializing the game */
 function init() {
+    clearInterval(gTimeInterval)
     gBoard = buildBoard();
     getRandomMines(gLevel.MINES)
     setMinesNegsCount(gBoard)
@@ -102,6 +109,9 @@ function cellClicked(elCell, i, j) {
     var cell = gBoard[i][j];
     if (cell.isMarked) return;
     if (cell.isShown) return;
+    if (gGame.shownCount === 0) {
+        gTimeInterval = setInterval(setTimer, 1000)
+    }
     cell.isShown = true;
     if (cell.minesAroundCount === 0 && !cell.isMine) {
         gGame.shownCount++
@@ -116,6 +126,7 @@ function cellClicked(elCell, i, j) {
     var strHTML = `<img class="lives" src="imgs/lives.png">`
     if (cell.isMine) {
         value = MINE;
+        // setTimeout(function () { value = MINE; }, 2000)
         gLevel.LIVES--
         if (gLevel.LIVES === 2) {
             elLives.innerHTML = strHTML + strHTML;
@@ -286,11 +297,13 @@ function expandShown(board, row, col) {
 
 function checkGameOver() {
     if (gGame.markedCount === gLevel.MINES && (Math.pow(gLevel.SIZE, 2) - gLevel.MINES) === gGame.shownCount) {
-        console.log('Game is over!');
+        console.log('You won!');
+        clearInterval(gTimeInterval)
     }
 }
 
 function blowGame(board) {
+    var elSmiley = document.querySelector('.smiley');
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
             var currCell = board[i][j];
@@ -300,5 +313,17 @@ function blowGame(board) {
             }
         }
     }
+    clearInterval(gTimeInterval)
+    elSmiley.innerText = LOSESMILEY;
     gGame.isOn = false;
+}
+
+function onSmiley(elSmiley) {
+    clearInterval(gTimeInterval);
+    elSmiley.innerText = WINNINGSMILEY;
+    console.log('adasd')
+    setTimeout(function () {
+        elSmiley.innerText = SMILEY;
+    }, 100);
+    init();
 }

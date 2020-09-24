@@ -41,6 +41,9 @@
     background-color: #C9D7F8;
     font-family: 'Ubuntu', sans-serif;
 }
+.smiley:hover{
+    cursor: pointer;
+}
 
 h1 {
     font-family: 'Architects Daughter', cursive;
