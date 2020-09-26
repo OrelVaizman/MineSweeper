@@ -41,7 +41,8 @@
     background-color: #C9D7F8;
     font-family: 'Ubuntu', sans-serif;
 }
-.smiley:hover{
+
+.smiley:hover {
     cursor: pointer;
 }
 
@@ -59,9 +60,13 @@ body {
 
 img {
     margin-top: 10px;
-    width: 30px;
+    width: 20px;
     height: auto;
 }
+/* .lives{
+    border: 2px solid black;
+
+} */
 
 table {
     border-radius: 12px;
