@@ -63,10 +63,12 @@ img {
     width: 20px;
     height: auto;
 }
-/* .lives{
-    border: 2px solid black;
-
-} */
+.lives{
+float:left;
+}
+.markedcells{
+    float:left;
+}
 
 table {
     border-radius: 12px;

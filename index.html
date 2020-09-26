@@ -18,12 +18,16 @@
         <button class="buttons" onclick="setDifficultyLevel(this)">Beginner</button>
         <button class="buttons" onclick="setDifficultyLevel(this)">Medium</button>
         <button class="buttons" onclick="setDifficultyLevel(this)">Expert</button>
+        <div class="lives">
+            Lives: <img src="imgs/lives.png">
+        </div>
         <div class="timer"><label id="minutes">00</label>:<label id="seconds">00</label></div>
+            <div class="markedcells">
+                Marked cells:
+            </div>
         <div class="smiley" onclick="onSmiley(this)">😃</div>
     </div>
-    <div class="lives">
-        Lives: <img src="imgs/lives.png">
-    </div>
+    <button class="rewind" onclick="rewindButton(this)">⏪</button>
     <div class="game-container">
     </div>
     <script src="js/utils.js"></script>
