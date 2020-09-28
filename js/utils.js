@@ -20,3 +20,21 @@ function DEVELOPERTOOL(board) {
         }
     }
 }
+
+// function actionsHistory(lastboard, lastgame, lastlevel) {
+//     var copyBoard = Object.assign({}, lastboard)
+//     var copyGame = Object.assign({}, lastgame)
+//     var copyLevel = Object.assign({}, lastlevel)
+//     gActionHistory.push({ board: copyBoard, game: copyGame, level: copyLevel });
+//     console.log(gActionHistory);
+// }
+// function rewindButton() {
+//     if (!gGame.isOn) return;
+//     var lastAction = gActionHistory.pop();
+//     console.log(lastAction);
+//     gBoard = Object.assign({}, lastAction.board);
+//     gGame = Object.assign({}, lastAction.game);
+//     gLevel = Object.assign({}, lastAction.level);
+//     setMinesNegsCount(gBoard);
+//     renderBoard(gBoard)
+// }

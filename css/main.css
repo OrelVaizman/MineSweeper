@@ -8,7 +8,7 @@
     margin: 0;
 }
 
-.header .buttons {
+.buttons {
     font-family: 'Ubuntu', sans-serif;
     transition-duration: 0.4s;
     margin: 10px;
@@ -26,7 +26,7 @@
     font-size: 16px;
 }
 
-.header .buttons:hover {
+.buttons:hover {
     background-color: #555555;
     color: white;
     cursor: pointer;
@@ -40,6 +40,11 @@
     margin-right: auto;
     background-color: #C9D7F8;
     font-family: 'Ubuntu', sans-serif;
+}
+.rewind{
+    float:center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .smiley:hover {
@@ -63,17 +68,21 @@ img {
     width: 20px;
     height: auto;
 }
-.lives{
-float:left;
+
+.lives {
+    float: left;
 }
-.markedcells{
-    float:left;
+
+.markedcells {
+    margin-left: 20px;
+    margin-top: 35px;
+    /* float: left; */
 }
 
 table {
     border-radius: 12px;
     background-color: #4C6663;
-    margin-top: 50px;
+    margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
     border: 2px solid black;

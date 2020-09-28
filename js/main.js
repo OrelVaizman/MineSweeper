@@ -17,6 +17,7 @@ var gGame = {
     markedCount: 0, /*Every markedcell*/
     visibleMine: 0, //Mines that are visible when u still had lives
     secsPassed: 0,
+    level: 'Beginner',
 }
 
 /*Two more levels defined at setDifficultyLevel*/
@@ -40,6 +41,7 @@ function init() {
         markedCount: 0,
         visibleMine: 0,
         secsPassed: 0,
+        level: 'beginner',
     }
 }
 
@@ -120,12 +122,9 @@ function cellClicked(elCell, i, j) {
     if (!gGame.isOn) return;
     cell.isShown = true;
     if (cell.minesAroundCount === 0 && !cell.isMine) {
-        console.log('counter++', gGame.shownCount)
-        // if (gGame.shownCount > 2) {
         expandShown(gBoard, i, j)
         gGame.shownCount++
     }
-    // console.log(elCell)
     elCell.style.backgroundColor = '#80CFA9';
     var value = EMPTY;
     var elLives = document.querySelector('.lives');
@@ -149,14 +148,13 @@ function cellClicked(elCell, i, j) {
             Lives: <img src="imgs/lives.png">
         </div>`
         }
-        else if (gLevel.LIVES === 0) {
+        else if (gLevel.LIVES <= 0) {
             elLives.innerHTML = '';
             blowGame(gBoard)
-            console.log('TOBECHANGED: BLOWN GAME MESSAGE')
+            alert('The game is blown!')
         }
     } else if (cell.minesAroundCount > 0 && !cell.isMine) {
         gGame.shownCount++
-        console.log('counter++', gGame.shownCount)
         value = cell.minesAroundCount;
     }
     checkGameOver();
@@ -217,11 +215,11 @@ function getRandomMines(numOfMines) {
 }
 
 function setDifficultyLevel(elBtn) {
+    var elSmiley = document.querySelector('.smiley');
     var elLives = document.querySelector('.lives');
     var strHTML = `<img class="lives" src="imgs/lives.png">`
-    var elSmiley = document.querySelector('.smiley');
     if (elBtn.innerText === 'Beginner') {
-        elLives.innerHTML = `        <div class="lives">
+        elLives.innerHTML = `<div class="lives">
         Lives: <img src="imgs/lives.png">
     </div>`
         elSmiley.innerText = SMILEY;
@@ -231,6 +229,7 @@ function setDifficultyLevel(elBtn) {
             LIVES: 1
         };
         init();
+        gGame.level = 'Beginner';
     }
     else if (elBtn.innerText === 'Medium') {
         elSmiley.innerText = SMILEY;
@@ -243,18 +242,20 @@ function setDifficultyLevel(elBtn) {
             LIVES: 2
         };
         init();
+        gGame.level = 'Medium'
     }
     else if (elBtn.innerText === 'Expert') {
         elSmiley.innerText = SMILEY;
         elLives.innerHTML = `        <div class="lives">
         Lives: <img src="imgs/lives.png">
-    </div>` + strHTML + strHTML;
+        </div>` + strHTML + strHTML;
         gLevel = {
             SIZE: 12,
             MINES: 30,
             LIVES: 3
         };
         init();
+        gGame.level = 'Expert'
     }
 }
 
@@ -277,6 +278,7 @@ function pad(val) {
 }
 
 function expandShown(board, row, col) {
+    var expandedCells = [];
     for (var i = row - 1; i <= row + 1; i++) {
         if (i < 0 || i >= board.length) continue;
         for (var j = col - 1; j <= col + 1; j++) {
@@ -284,9 +286,8 @@ function expandShown(board, row, col) {
             if (i === row && j === col) continue;
             var currCell = board[i][j];
             if (currCell.isShown) continue;
-            console.log(dom);
             var dom = document.querySelector(`td#cell-${i}-${j}.cell`);
-            // `td#cell-${i}-${j}.cell`
+            expandedCells.push({ i, j, dom });
             actionsHistory(i, j, 'cell', dom);
             currCell.isShown = true;
             var value = EMPTY;
@@ -294,10 +295,10 @@ function expandShown(board, row, col) {
                 value = currCell.minesAroundCount;
             }
             gGame.shownCount++
-            console.log('counter++', gGame.shownCount)
             renderCell(i, j, value)
         }
     }
+    return expandedCells;
 }
 
 function checkGameOver() {
@@ -326,6 +327,7 @@ function blowGame(board) {
 }
 
 function onSmiley(elSmiley) {
+    updateLivesElement();
     clearInterval(gTimeInterval);
     elSmiley.innerText = WINNINGSMILEY;
     console.log('Initilaizing')
@@ -337,7 +339,6 @@ function onSmiley(elSmiley) {
 
 function firstClickNeverAMine(board, row, col) {
     var curCell = board[row][col];
-    console.log('Getting into the function');
     var newMineCoords = getAllPossibleCoords(board);
     var newCoord = newMineCoords[getRandomInt(0, newMineCoords.length)]
     var newI = newCoord.i;
@@ -355,28 +356,43 @@ function updateMarkedCountDOM() {
 
 function actionsHistory(i, j, type, dom) {
     gActionHistory.push({ i, j, type, dom });
-    console.log(gActionHistory);
 }
 
 function rewindButton() {
-    if (!gGame.isOn) return;
+    if (!gGame.isOn || gGame.shownCount === 0) return;
     var elLives = document.querySelector('.lives');
     var strHTML = `<img class="lives" src="imgs/lives.png">`
     var lastAction = gActionHistory.pop();
     if (lastAction.type === 'cell') {
         gBoard[lastAction.i][lastAction.j].isShown = false;
         gGame.shownCount--;
-    } else if (lastAction.type === 'mark') {
+    } else if (lastAction.type === 'mark' && gBoard[lastAction.i][lastAction.j].isMarked === true) {
         gBoard[lastAction.i][lastAction.j].isMarked = false;
         gGame.markedCount--;
     } else if (lastAction.type === 'mine') {
         gBoard[lastAction.i][lastAction.j].isShown = false;
-        gGame.markedCount--;
+        gGame.shownCount--;
         gGame.visibleMine--;
         gLevel.LIVES++;
         elLives.innerHTML += strHTML;
-        // background-color: #4C6663
     }
     renderCell(lastAction.i, lastAction.j, EMPTY)
     lastAction.dom.style.backgroundColor = '#4C6663';
 }
+
+function updateLivesElement() {
+    var elLives = document.querySelector('.lives');
+    var firstStrHTML = `<div class="lives">
+    Lives: <img src="imgs/lives.png">
+</div>`
+    var strHTML = `<img class="lives" src="imgs/lives.png">`
+    if (gGame.level === 'Beginner') {
+        elLives.innerHTML = firstStrHTML;
+    } else if (gGame.level === 'Medium') {
+        elLives.innerHTML = firstStrHTML + strHTML;
+    }
+    if (gGame.level === 'Expert') {
+        elLives.innerHTML = firstStrHTML + strHTML + strHTML;
+    }
+}
+

@@ -21,13 +21,16 @@
         <div class="lives">
             Lives: <img src="imgs/lives.png">
         </div>
-        <div class="timer"><label id="minutes">00</label>:<label id="seconds">00</label></div>
-            <div class="markedcells">
-                Marked cells:
-            </div>
+        <div class="markedcells">
+            Marked cells:
+        </div>
+        
+        <div class="timer">
+            <label id="minutes">00</label>:<label id="seconds">00</label>
+        </div>
         <div class="smiley" onclick="onSmiley(this)">😃</div>
     </div>
-    <button class="rewind" onclick="rewindButton(this)">⏪</button>
+    <button class="buttons rewind" onclick="rewindButton(this)">⏪ Undo ⏪</button>
     <div class="game-container">
     </div>
     <script src="js/utils.js"></script>
